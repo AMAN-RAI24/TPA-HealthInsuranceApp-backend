@@ -46,7 +46,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                         CorsConfiguration config = new CorsConfiguration();
 //                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
-                        config.setAllowedOrigins(Collections.singletonList(" https://insure-corp-backend-urtjok3rza-wl.a.run.app/"));
+                        config.setAllowedOrigins(Collections.singletonList("https://insure-corp-frontend-urtjok3rza-wl.a.run.app"));
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));
