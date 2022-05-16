@@ -1,4 +1,4 @@
-package com.hashedin.apigatewayserver.exception;
+package com.insurecorp.insureCorp.exceptionHandlers;
 
 public class ExceptionBody {
     private int status;

@@ -17,17 +17,17 @@ public class GroupPolicy {
     @OneToOne
     private User Manager;
     private String type;
-    private Date creationDate;
+    private Date creationDate = new Date();
     private double coverage;
     private int hospitalTier;
     private int roomRentLimit;
     private boolean diagnosticTest;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private MaximumClaim maximumClaim;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private EmployeeDistribution employeeDistribution;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private MaternityBenefits maternityBenefits;
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     private FamilyDetails familyDetails;
 }

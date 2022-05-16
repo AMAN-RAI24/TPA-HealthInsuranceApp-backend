@@ -1,4 +1,4 @@
-package com.hashedin.apigatewayserver.exception;
+package com.insurecorp.insureCorp.exceptions;
 
 public class CustomException extends RuntimeException {
     public CustomException() {
