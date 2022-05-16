@@ -18,6 +18,6 @@ public class UserFamilyDetails {
     private String name;
     private String relation;
     private Integer age;
-    private String number;
-    private String url;
+    private String phoneNumber;
+    private String imageUrl;
 }
