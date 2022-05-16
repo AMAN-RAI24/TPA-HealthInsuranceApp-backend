@@ -11,16 +11,13 @@ import javax.persistence.Id;
 @Data
 @Entity
 @NoArgsConstructor
-public class EmployeeDistribution {
+public class UserFamilyDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int employeeDistributionId;
-    private int ageGroup1;
-    private int ageGroup2;
-    private int ageGroup3;
-    private int ageGroup4;
-    private int males;
-    private int females;
-    private int others;
-    private int total;
+    private int userFamilyDetailsId;
+    private String name;
+    private String relation;
+    private Integer age;
+    private String phoneNumber;
+    private String imageUrl;
 }

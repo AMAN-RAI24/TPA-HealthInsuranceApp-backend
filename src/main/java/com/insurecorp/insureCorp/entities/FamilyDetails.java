@@ -18,4 +18,17 @@ public class FamilyDetails {
     private int familyDetailsId;
     private int adults;
     private int children;
+//    private String name;
+//    private String relation;
+//    private Integer age;
+//    private String number;
+//    private String url;
+
+//    private String name;
+//    private String relation;
+//    private Integer age;
+//    private String idProofType;
+//    private String idProofNumber;
+//
+//    private User user;
 }

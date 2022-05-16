@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -14,10 +15,19 @@ public class UserPolicy {
     private int userPolicyId;
     @OneToOne
     private User user;
-    @OneToOne
+    @ManyToOne
     private GroupPolicy groupPolicy;
     private double coverage;
-    @OneToOne
-    private FamilyDetails familyDetails;
+    @OneToMany
+    private List<UserFamilyDetails> userFamilyDetails;
+
+//    @OneToMany
+//    private UserFamilyDetails userFamilyDetails;
+//
+
+//    @OneToOne
+//    private List<UserFamilyDetails> userFamilyDetails;
+
+
 
 }

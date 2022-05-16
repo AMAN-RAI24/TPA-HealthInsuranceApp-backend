@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 public class CompanyController {
@@ -18,7 +19,12 @@ public class CompanyController {
         if(companyList.isEmpty()){
             throw new CompanyNotFoundException(companyname);
         }
-            return companyList;
+        return companyList;
+//        Company company =companyrepository.findByCompanyName(companyname);
+//        if(Objects.isNull(company)){
+//            throw new CompanyNotFoundException(companyname);
+//        }
+//            return company;
     }
     @RequestMapping(path="/getcompanylist",method= RequestMethod.GET)
     public List<Company> listcompanies(){
