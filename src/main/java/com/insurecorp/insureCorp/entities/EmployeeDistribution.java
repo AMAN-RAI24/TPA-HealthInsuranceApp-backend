@@ -21,5 +21,6 @@ public class EmployeeDistribution {
     private int ageGroup4;
     private int males;
     private int females;
+    private int others;
     private int total;
 }

@@ -1,7 +1,10 @@
 package com.insurecorp.insureCorp.services;
 
 import com.insurecorp.insureCorp.constants.SecurityConstants;
+import com.insurecorp.insureCorp.entities.User;
+import com.insurecorp.insureCorp.repositories.UserRepository;
 import com.insurecorp.insureCorp.requestModels.LoginRequest;
+import com.insurecorp.insureCorp.userManagement.JwtUtils;
 import com.insurecorp.insureCorp.userManagement.MyUserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
@@ -26,6 +29,8 @@ public class LoginService {
     private AuthenticationManager authenticationManager;
     @Autowired
     private MyUserService myUserService;
+    @Autowired
+    private UserRepository userRepository;
 
     public String login(LoginRequest loginRequest) throws Exception {
         System.out.println(1);
@@ -52,5 +57,13 @@ public class LoginService {
             authoritiesSet.add(authority.getAuthority());
         }
         return String.join(",", authoritiesSet);
+    }
+
+    public User getUser (String jwt)
+    {
+        JwtUtils userInfo = new JwtUtils();
+        userInfo.processJWT(jwt);
+        User user =userRepository.findUserByEmail(userInfo.getUsername()).get(0);
+        return user;
     }
 }

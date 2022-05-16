@@ -4,11 +4,10 @@ import com.insurecorp.insureCorp.entities.User;
 import com.insurecorp.insureCorp.repositories.UserRepository;
 import com.insurecorp.insureCorp.requestModels.LoginRequest;
 import com.insurecorp.insureCorp.responseModels.LoginResponse;
+import com.insurecorp.insureCorp.responseModels.UserInfo;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class AuthenticationController {
@@ -26,5 +25,15 @@ public class AuthenticationController {
     loginResponse.setRole(user.getRole().getRole());
     System.out.println("hello");
         return loginResponse;
+    }
+    @GetMapping("get-info")
+    public UserInfo getUser(@RequestHeader("Authorization") String jwt)
+    {
+        UserInfo userInfo = new UserInfo();
+        User user =loginService.getUser(jwt);
+        userInfo.setName(user.getName());
+        userInfo.setCompany(user.getCompany().getCompanyName());
+        userInfo.setEmail(user.getEmail());
+        return userInfo;
     }
 }
