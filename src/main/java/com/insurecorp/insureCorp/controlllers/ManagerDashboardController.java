@@ -2,6 +2,7 @@ package com.insurecorp.insureCorp.controlllers;
 
 import com.insurecorp.insureCorp.entities.GroupPolicy;
 import com.insurecorp.insureCorp.exceptions.CustomException;
+import com.insurecorp.insureCorp.exceptions.CustomExceptionV2;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
 import com.insurecorp.insureCorp.services.ManagerDashboardService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,12 +33,20 @@ public class ManagerDashboardController {
     ResponseEntity<GroupPolicy> getPolicyById(@PathVariable Integer policyId){
         return new ResponseEntity<GroupPolicy>(managerDashboardService.getPolicyById(policyId),new HttpHeaders(), HttpStatus.OK);
     }
+//    @GetMapping("/compare/{planId_1}")
+//    ResponseEntity<Map<String,Object>> comparePlansByIdEdgeCase1(@PathVariable Integer planId_1) {
+//        throw new CustomException("Parameter Required planId_1 and planId_2",400);
+//    }
+
+    @GetMapping({"/compare", "/compare/{planId_1}"})
+    ResponseEntity<Map<String,Object>> comparePlansByIdEdgeCase() {
+        throw new CustomExceptionV2("More Args Required",400,Map.of("Usage","/dashboard/compare/{planId_1}/{planId_2}"));
+//        throw new CustomException("Usage: /dashboard/compare/{planId_1}/{planId_2}",400);
+    }
+
 
     @GetMapping("/compare/{planId_1}/{planId_2}")
-    ResponseEntity<Map<String,Object>> comparePlansById(@PathVariable Integer planId_1, @PathVariable Integer planId_2){
-        if (planId_1 == null || planId_2 == null){
-            throw new CustomException("Parameter Required planId_1 and planId_2",400);
-        }
+    ResponseEntity<Map<String,List>> comparePlansById(@PathVariable Integer planId_1, @PathVariable Integer planId_2){
         return ResponseEntity.ok().header("Content-Type","application/json").body(managerDashboardService.comparePlansById(planId_1, planId_2));
     }
 
