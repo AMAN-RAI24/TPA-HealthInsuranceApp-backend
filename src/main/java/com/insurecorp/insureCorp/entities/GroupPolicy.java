@@ -19,6 +19,8 @@ public class GroupPolicy {
 
     @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private User Manager;
+    @ManyToOne(cascade= CascadeType.MERGE,fetch = FetchType.EAGER)
+    private Company company;
     private String type;
     private Date creationDate = new Date();
     private Double coverage;
@@ -34,6 +36,5 @@ public class GroupPolicy {
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private MaternityBenefits maternityBenefits;
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-
     private FamilyDetails familyDetails;
 }
