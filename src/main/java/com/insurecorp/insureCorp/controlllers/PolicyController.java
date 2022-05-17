@@ -77,4 +77,41 @@ public class PolicyController {
         }
         return policies;
     }
+    @GetMapping("/get-base-plans")
+    public List<Policies> getBasePlans()
+    {
+        List<GroupPolicy> groupPolicies = groupPolicyRepository.findGroupPolicyByType("BASE");
+        List<Policies> policies = new ArrayList<>();
+        for (GroupPolicy item: groupPolicies)
+        {
+            Policies policy = new Policies();
+            int benefits =0;
+            if(item.getMaximumClaim().getAngiography()!=0.0)
+            {
+                benefits++;
+            }
+            if(item.getMaximumClaim().getBypassSurgery()!=0.0)
+            {
+                benefits++;
+            }
+            if(item.getMaximumClaim().getCataractSurgery()!=0.0)
+            {
+                benefits++;
+            }
+            if(item.getMaximumClaim().getCovidCoverage()!=0.0)
+            {
+                benefits++;
+            }
+            if(item.getMaximumClaim().getHospitalization()!=0.0)
+            {
+                benefits++;
+            }
+            policy.setPolicyName(item.getPolicyName());
+            policy.setCoverage(item.getCoverage());
+            policy.setBenefits(benefits);
+            policy.setPolicyId(item.getGroupPolicyId());
+            policies.add(policy);
+        }
+        return policies;
+    }
 }
