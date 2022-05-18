@@ -9,5 +9,6 @@ public class LoginResponse {
     String jwt;
     String message;
     String role;
+    String name;
 }
 

@@ -23,7 +23,7 @@ public class AuthenticationController {
     loginResponse.setMessage("login successful");
     User user = userRepository.findUserByEmail(loginRequest.getUsername()).get(0);
     loginResponse.setRole(user.getRole().getRole());
-    System.out.println("hello");
+    loginResponse.setName(user.getName());
         return loginResponse;
     }
     @GetMapping("get-info")

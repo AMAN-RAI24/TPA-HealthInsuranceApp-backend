@@ -11,5 +11,8 @@ import java.util.List;
 public interface GroupPolicyRepository extends JpaRepository<GroupPolicy,Integer> {
 //    GroupPolicy findGroupPolicyById (int id);
     List<GroupPolicy> findGroupPolicyByCompany (Company company);
+
     List<GroupPolicy> findGroupPolicyByCompanyOrderByCreationDateDesc(Company company);
+    List<GroupPolicy> findGroupPolicyByType(String type);
+
 }

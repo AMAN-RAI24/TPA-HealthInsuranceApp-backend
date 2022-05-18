@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -22,6 +23,8 @@ public class UserPolicy {
     private double coverage;
     @OneToMany(cascade = CascadeType.ALL)
     private List<UserFamilyDetails> userFamilyDetails;
+
+
 
 //    @OneToMany
 //    private UserFamilyDetails userFamilyDetails;
