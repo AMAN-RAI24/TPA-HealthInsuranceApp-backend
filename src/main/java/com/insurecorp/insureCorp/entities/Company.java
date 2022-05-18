@@ -20,4 +20,8 @@ public class Company {
     @JsonIgnore
     @OneToMany(mappedBy = "company")
     private List<User> users;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "company")
+    private List<GroupPolicy> groupPolicies;
 }

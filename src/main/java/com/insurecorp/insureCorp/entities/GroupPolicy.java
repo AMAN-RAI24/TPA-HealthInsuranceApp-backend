@@ -14,17 +14,19 @@ import java.util.Date;
 public class GroupPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int groupPolicyId;
+    private Integer groupPolicyId;
     private String policyName;
 
     @OneToOne(cascade = CascadeType.MERGE,fetch = FetchType.EAGER)
     private User Manager;
+    @ManyToOne(cascade= CascadeType.MERGE,fetch = FetchType.EAGER)
+    private Company company;
     private String type;
     private Date creationDate = new Date();
-    private double coverage;
-    private int hospitalTier;
-    private int roomRentLimit;
-    private boolean diagnosticTest;
+    private Double coverage;
+    private Integer hospitalTier;
+    private Integer roomRentLimit;
+    private Boolean diagnosticTest;
 
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
@@ -34,6 +36,5 @@ public class GroupPolicy {
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
     private MaternityBenefits maternityBenefits;
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)
-
     private FamilyDetails familyDetails;
 }
