@@ -1,8 +1,11 @@
 package com.insurecorp.insureCorp.controlllers;
 
-import com.insurecorp.insureCorp.entities.GroupPolicy;
-import com.insurecorp.insureCorp.entities.User;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insurecorp.insureCorp.entities.*;
+import com.insurecorp.insureCorp.exceptions.CustomException;
+import com.insurecorp.insureCorp.exceptions.CustomExceptionV2;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
+import com.insurecorp.insureCorp.repositories.UserPolicyRepository;
 import com.insurecorp.insureCorp.responseModels.Policies;
 import com.insurecorp.insureCorp.responseModels.PolicyAddedResponse;
 import com.insurecorp.insureCorp.services.LoginService;
@@ -11,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class PolicyController {
@@ -18,6 +23,9 @@ public class PolicyController {
     private GroupPolicyRepository groupPolicyRepository;
     @Autowired
     private LoginService loginService;
+
+    @Autowired
+    UserPolicyRepository userPolicyRepository;
     @PostMapping("/add/policy")
     public PolicyAddedResponse  addPolicy(@RequestBody GroupPolicy groupPolicy,@RequestHeader("Authorization") String jwt)
     {
@@ -113,5 +121,83 @@ public class PolicyController {
             policies.add(policy);
         }
         return policies;
+    }
+
+    @PostMapping({"/add/userPolicy","/add/top-up","/add/coverage"})
+    UserPolicy addUserPolicy(@RequestHeader("Authorization") String jwt, @RequestBody Map<String,Object> requestBody){
+//    List<UserFamilyDetails> addUserPolicy(@RequestHeader("Authorization") String jwt, @RequestBody Map<String,Object> requestBody){
+        User user = loginService.getUser(jwt);
+        List<GroupPolicy> list = user.getCompany().getGroupPolicies();
+        if(list.isEmpty()){
+            throw new CustomException("Company hasn't bought any policies yet.",404);
+        }
+        GroupPolicy latest = list.get(0);
+
+
+        for(GroupPolicy groupPolicy: list){
+            if (groupPolicy.getCreationDate().compareTo(latest.getCreationDate()) >= 0){
+                latest = groupPolicy;
+            }
+        }
+
+        UserPolicy userPolicyFromDb = userPolicyRepository.findByGroupPolicyAndUser(latest,user);
+//        V1
+//        List<UserFamilyDetails> dumbFamilyDetailsList =  (List)requestBody.get("familyMembers");
+
+//        Test
+
+
+//        List<UserFamilyDetails> dumbFamilyDetailsList = new ArrayList<>();
+//
+//        UserFamilyDetails ob1 = new UserFamilyDetails();
+//        ob1.setName("my name");
+//        ob1.setAge(21);
+//        ob1.setRelation("myself");
+//        ob1.setImageUrl("url");
+//        ob1.setPhoneNumber("323298239");
+//
+//        UserFamilyDetails ob2 = new UserFamilyDetails();
+//        ob2.setName("not my hhhhhhhhhhhhhhh");
+//        ob2.setAge(21);
+//        ob2.setRelation("not myself");
+//        ob2.setImageUrl("not url");
+//        ob2.setPhoneNumber("32323555555");
+//
+//        dumbFamilyDetailsList.add(ob1);
+//        dumbFamilyDetailsList.add(ob2);
+
+
+//        V2
+        List<Object> dumbFamilyDetailsList = (List) requestBody.get("familyMembers");
+        List<UserFamilyDetails> familyDetails = new ArrayList<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (Object obj : dumbFamilyDetailsList) {
+            UserFamilyDetails temp = objectMapper.convertValue(obj, UserFamilyDetails.class);
+
+            familyDetails.add(temp);
+        }
+
+
+        UserPolicy userPolicy = new UserPolicy();
+
+        userPolicy.setUser(user);
+        userPolicy.setGroupPolicy(latest);
+//        userPolicy.setUserFamilyDetails(dumbFamilyDetailsList);
+        userPolicy.setUserFamilyDetails(familyDetails);
+        if (requestBody.get("top-up") == null) {
+            throw new CustomExceptionV2("More Args Required", 403, Map.of("Usage", "{top-up:Value}", "Content-Type", "application/json"));
+        }
+        userPolicy.setCoverage((Double) requestBody.get("top-up"));
+
+        if(!Objects.isNull(userPolicyFromDb)) {
+
+            userPolicy.setUserPolicyId(userPolicyFromDb.getUserPolicyId());
+
+        }
+        userPolicyRepository.save(userPolicy);
+
+
+
+        return userPolicyRepository.findByGroupPolicyAndUser(latest,user);
     }
 }
