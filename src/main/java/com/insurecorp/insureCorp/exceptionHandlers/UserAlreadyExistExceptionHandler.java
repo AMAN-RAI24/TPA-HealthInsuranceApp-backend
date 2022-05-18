@@ -1,7 +1,6 @@
 package com.insurecorp.insureCorp.exceptionHandlers;
 
-import com.insurecorp.insureCorp.entities.User;
-import com.insurecorp.insureCorp.exceptions.UserAlreadyExistException;
+import com.insurecorp.insureCorp.exceptionHandlers.exceptions.UserAlreadyExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

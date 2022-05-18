@@ -1,5 +1,6 @@
 package com.insurecorp.insureCorp.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @NoArgsConstructor
+@JsonIgnoreProperties(value={"hibernateLazyInitializer","handler"})
 public class UserPolicy {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,13 +21,10 @@ public class UserPolicy {
     @ManyToOne
     private GroupPolicy groupPolicy;
     private double coverage;
-    @OneToMany(
-//            mappedBy = "userPolicy",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true
-    )
-//    @Column(unique = true)
-    private List<UserFamilyDetails> userFamilyDetails = new ArrayList<>();
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<UserFamilyDetails> userFamilyDetails;
+
+
 
 //    @OneToMany
 //    private UserFamilyDetails userFamilyDetails;
