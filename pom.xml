@@ -60,17 +60,16 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>com.google.api.client</groupId>
-			<artifactId>google-api-client</artifactId>
-			<version>1.4.1-beta</version>
-		</dependency>
+<dependency>
+<groupId>com.google.api.client</groupId>
+<artifactId>google-api-client</artifactId>
+<version>1.4.1-beta</version>
+</dependency>
 		<dependency>
 			<groupId>com.google.http-client</groupId>
 			<artifactId>google-http-client-gson</artifactId>
 			<version>1.22.0</version>
 		</dependency>
-		<!-- Thanks for using https://jar-download.com -->
 
 		<dependency>
 			<groupId>org.projectlombok</groupId>
