@@ -61,8 +61,9 @@
 			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
 		</dependency>
 <dependency>
-<groupId>com.google.api.client</groupId>
-<artifactId>google-api-client</artifactId>
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.19.0</version>
 </dependency>
 		<dependency>
 			<groupId>com.google.http-client</groupId>
