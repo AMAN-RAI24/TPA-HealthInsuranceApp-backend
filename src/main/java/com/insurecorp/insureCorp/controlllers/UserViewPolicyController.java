@@ -31,7 +31,27 @@ public class UserViewPolicyController {
     @RequestMapping(path="/get-user-policy",method= RequestMethod.GET)
     public UserPolicy getUserPolicy( @RequestHeader("Authorization") String jwt){
         User user = loginService.getUser(jwt);
-        UserPolicy userPolicy=userViewPolicyRepository.findByUserOrderByUserPolicyIdDesc(user).get(0);
+        List<UserPolicy> userPolicyList=userViewPolicyRepository.findByUserOrderByUserPolicyIdDesc(user);
+        UserPolicy userPolicy=new UserPolicy();
+        GroupPolicy groupPolicy=new GroupPolicy();
+        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
+        if(groupPolicyList.isEmpty()){
+            groupPolicy.setCompany(user.getCompany());
+        }
+        else{
+            groupPolicy=groupPolicyList.get(0);
+        }
+        if(userPolicyList.isEmpty()){
+            userPolicy.setUser(user);
+            userPolicy.setCoverage(0);
+            userPolicy.setGroupPolicy(groupPolicy);
+            userPolicy.setUserFamilyDetails(new ArrayList<>());
+            userViewPolicyRepository.save(userPolicy);
+        }
+        else{
+            userPolicy=userPolicyList.get(0);
+        }
+
         return userPolicy;
     }
 

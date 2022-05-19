@@ -196,8 +196,6 @@ public class PolicyController {
         }
         userPolicyRepository.save(userPolicy);
 
-
-
         return userPolicyRepository.findByGroupPolicyAndUser(latest,user);
     }
 }
