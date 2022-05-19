@@ -21,9 +21,14 @@ public class UserPolicy {
     @ManyToOne
     private GroupPolicy groupPolicy;
     private double coverage;
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<UserFamilyDetails> userFamilyDetails;
 
+    @OneToMany(
+//            mappedBy = "userPolicy",
+            cascade = CascadeType.ALL,
+            orphanRemoval = true
+    )
+//    @Column(unique = true)
+    private List<UserFamilyDetails> userFamilyDetails = new ArrayList<>();
 
 
 //    @OneToMany
