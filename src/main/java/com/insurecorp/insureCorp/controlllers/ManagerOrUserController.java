@@ -51,7 +51,7 @@ public class ManagerOrUserController {
             return payload;
         }
         GroupPolicy groupPolicy =  userPolicy.getGroupPolicy();
-        payload.put("planDetails", Map.of("policyName",groupPolicy.getPolicyName(),"coverage",groupPolicy.getCoverage(),"premium",userPolicy.getCoverage()));
+        payload.put("planDetails", Map.of("policyName",groupPolicy.getPolicyName(),"coverage",groupPolicy.getCoverage(),"topUp",userPolicy.getCoverage()));
         payload.put("familyDetails",userPolicy.getUserFamilyDetails());
         return payload;
     }
