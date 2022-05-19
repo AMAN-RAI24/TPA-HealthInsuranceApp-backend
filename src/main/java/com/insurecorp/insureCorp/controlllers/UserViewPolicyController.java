@@ -36,27 +36,21 @@ public class UserViewPolicyController {
     public UserPolicy getUserPolicy( @RequestHeader("Authorization") String jwt){
         User user = loginService.getUser(jwt);
         List<UserPolicy> userPolicyList=userViewPolicyRepository.findByUserOrderByUserPolicyIdDesc(user);
-        UserPolicy userPolicy=new UserPolicy();
+
         GroupPolicy groupPolicy=new GroupPolicy();
         List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
-        if(groupPolicyList.isEmpty()){
-            groupPolicy.setCompany(user.getCompany());
-        }
-        else{
-            groupPolicy=groupPolicyList.get(0);
-        }
-        if(userPolicyList.isEmpty()){
+        if(!groupPolicyList.isEmpty() && !userPolicyList.isEmpty() ){
+            return userPolicyList.get(0);
+        } else if (!groupPolicyList.isEmpty()) {
+            UserPolicy userPolicy=new UserPolicy();
             userPolicy.setUser(user);
-            userPolicy.setCoverage(0);
-            userPolicy.setGroupPolicy(groupPolicy);
+            userPolicy.setGroupPolicy(groupPolicyList.get(0));
             userPolicy.setUserFamilyDetails(new ArrayList<>());
-            userViewPolicyRepository.save(userPolicy);
+            userPolicy.setCoverage(0);
+            userPolicy.setUserPolicyId(1);
+            return userPolicy;
         }
-        else{
-            userPolicy=userPolicyList.get(0);
-        }
-
-        return userPolicy;
+        return null;
     }
 
 
@@ -70,10 +64,10 @@ public class UserViewPolicyController {
 
 //        Finding existing user policy
 
-        UserPolicy fetchedUserPolicy = userPolicyRepository.findByGroupPolicyAndUser(groupPolicy,user);
-        if (!Objects.isNull(fetchedUserPolicy)){
-          userPolicy.setUserPolicyId(fetchedUserPolicy.getUserPolicyId());
-        }
+//        UserPolicy fetchedUserPolicy = userPolicyRepository.findByGroupPolicyAndUser(groupPolicy,user);
+//        if (!Objects.isNull(fetchedUserPolicy)){
+//          userPolicy.setUserPolicyId(fetchedUserPolicy.getUserPolicyId());
+//        }
 
         //Editing ends here
         userPolicy.setGroupPolicy(groupPolicy);

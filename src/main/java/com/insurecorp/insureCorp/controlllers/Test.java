@@ -32,7 +32,6 @@ public class Test {
         return "Hello World";
     }
 
-
     @GetMapping("/get/{id}")
     User getUser(@PathVariable Integer id){
         return userRepository.findById(id).get();
@@ -44,15 +43,11 @@ public class Test {
         System.out.println("dsfsadf");
         System.out.println(file.getOriginalFilename());
 
-
-
-
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         BlobId blobId = BlobId.of(bucketName, "uploaded_image");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
         storage.create(blobInfo, file.getBytes());
-        System.out.println(
-                "File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + "uploaded_image");
+        System.out.println("File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + "uploaded_image");
 
         Storage storage1 = StorageOptions.getDefaultInstance().getService();
         System.out.println("Buckets:");
