@@ -1,9 +1,7 @@
 package com.insurecorp.insureCorp.controlllers;
 
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.api.gax.paging.Page;
+import com.google.cloud.storage.*;
 
 import com.insurecorp.insureCorp.entities.User;
 import com.insurecorp.insureCorp.repositories.UserRepository;
@@ -45,6 +43,10 @@ public class Test {
         String bucketName="hu-may-prod-insure-corp";
         System.out.println("dsfsadf");
         System.out.println(file.getOriginalFilename());
+
+
+
+
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
         BlobId blobId = BlobId.of(bucketName, "uploaded_image");
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
@@ -52,10 +54,26 @@ public class Test {
         System.out.println(
                 "File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + "uploaded_image");
 
+        Storage storage1 = StorageOptions.getDefaultInstance().getService();
+        System.out.println("Buckets:");
+        Page<Bucket> buckets = storage1.list();
+        for (Bucket bucket : buckets.iterateAll()) {
+            System.out.println(bucket.toString());
+        }
 //        System.out.println(file.getName());
 
 //        System.out.println(fileDetails.getObjectName());
 //        fileDetails.setFile(new File("./a"));
 //        System.out.println(fileDetails.getFile().getName());
+    }
+    @GetMapping("/list-buckets")
+    void listBuckets()
+    {
+        Storage storage1 = StorageOptions.getDefaultInstance().getService();
+        System.out.println("Buckets:");
+        Page<Bucket> buckets = storage1.list();
+        for (Bucket bucket : buckets.iterateAll()) {
+            System.out.println(bucket.toString());
+        }
     }
 }
