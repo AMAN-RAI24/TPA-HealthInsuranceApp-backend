@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 @RestController
 public class UserViewPolicyController {
@@ -25,6 +26,9 @@ public class UserViewPolicyController {
     GroupPolicyRepository groupPolicyRepository;
     @Autowired
     CompanyRepository companyRepository;
+
+    @Autowired
+    UserPolicyRepository userPolicyRepository;
     @Autowired
     LoginService loginService;
 
@@ -57,10 +61,21 @@ public class UserViewPolicyController {
         UserPolicy userPolicy=new UserPolicy();
         userPolicy.setUser(user);
         GroupPolicy groupPolicy=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany()).get(0);
+
+//        Finding existing user policy
+
+        UserPolicy fetchedUserPolicy = userPolicyRepository.findByGroupPolicyAndUser(groupPolicy,user);
+        if (!Objects.isNull(fetchedUserPolicy)){
+          userPolicy.setUserPolicyId(fetchedUserPolicy.getUserPolicyId());
+        }
+
+        //Editing ends here
         userPolicy.setGroupPolicy(groupPolicy);
         userPolicy.setCoverage(policy.getCoverage());
         userPolicy.setUserFamilyDetails(policy.getFamilyDetails());
         userViewPolicyRepository.save(userPolicy);
+
+
         return "ok";
     }
 
