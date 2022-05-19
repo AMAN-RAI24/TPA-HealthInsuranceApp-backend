@@ -1,12 +1,11 @@
 package com.insurecorp.insureCorp.controlllers;
 
 import com.insurecorp.insureCorp.entities.User;
-import com.insurecorp.insureCorp.exceptions.UserAlreadyExistException;
-import com.insurecorp.insureCorp.repositories.CompanyRepository;
-import com.insurecorp.insureCorp.repositories.RoleRepository;
+
+import com.insurecorp.insureCorp.exceptionHandlers.exceptions.UserAlreadyExistException;
+
 import com.insurecorp.insureCorp.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestBody;

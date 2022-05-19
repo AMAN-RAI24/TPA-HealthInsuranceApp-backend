@@ -1,7 +1,7 @@
 package com.insurecorp.insureCorp.controlllers;
 
 import com.insurecorp.insureCorp.entities.Role;
-import com.insurecorp.insureCorp.exceptions.UnidentifiedRoleException;
+import com.insurecorp.insureCorp.exceptionHandlers.exceptions.UnidentifiedRoleException;
 import com.insurecorp.insureCorp.repositories.RoleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;

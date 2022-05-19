@@ -1,10 +1,9 @@
 package com.insurecorp.insureCorp.controlllers;
 
 import com.insurecorp.insureCorp.entities.Company;
-import com.insurecorp.insureCorp.exceptions.CompanyNotFoundException;
+import com.insurecorp.insureCorp.exceptionHandlers.exceptions.CompanyNotFoundException;
 import com.insurecorp.insureCorp.repositories.CompanyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
