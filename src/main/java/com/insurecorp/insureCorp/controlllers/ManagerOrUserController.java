@@ -1,9 +1,11 @@
 package com.insurecorp.insureCorp.controlllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insurecorp.insureCorp.entities.GroupPolicy;
 import com.insurecorp.insureCorp.entities.User;
 import com.insurecorp.insureCorp.entities.UserPolicy;
 import com.insurecorp.insureCorp.exceptions.CustomException;
+import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
 import com.insurecorp.insureCorp.repositories.UserPolicyRepository;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class ManagerOrUserController {
 
     @Autowired
     private UserPolicyRepository userPolicyRepository;
+
+    @Autowired
+    GroupPolicyRepository groupPolicyRepository;
 
     @GetMapping("/profile")
     Map<String,Object> getProfile(@RequestHeader("Authorization") String jwt) {
@@ -43,14 +48,27 @@ public class ManagerOrUserController {
         }
 
         UserPolicy userPolicy =  userPolicyRepository.findByGroupPolicyAndUser(latest,user);
-
-//        UserPolicy userPolicy =  userPolicyRepository.findByUser(user);
         payload.put("planDetails", Map.of("policyName",latest.getPolicyName(),"coverage",latest.getCoverage(),"topUp",Objects.isNull(userPolicy)?0.0:userPolicy.getCoverage()));
+
+        if ("ROLE_MANAGER".equals(user.getRole().getRole())){
+            List<GroupPolicy> previousPlans = groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
+            List<Map> payloadPreviousPlans = new ArrayList<>();
+            ObjectMapper objectMapper = new ObjectMapper();
+            Map<String,Object> temp;
+            for(GroupPolicy previousPlan: previousPlans){
+                temp = objectMapper.convertValue(previousPlan,Map.class);
+                temp.remove("company");
+                temp.remove("manager");
+                payloadPreviousPlans.add(temp);
+            }
+            payload.put("previousPlans",payloadPreviousPlans);
+
+        }
         if (Objects.isNull(userPolicy)){
             payload.put("familyDetails",new ArrayList<>());
             return payload;
         }
-//        GroupPolicy groupPolicy =  userPolicy.getGroupPolicy();
+
 
         payload.put("familyDetails", userPolicy.getUserFamilyDetails().isEmpty()? new ArrayList<>() : userPolicy.getUserFamilyDetails());
         return payload;

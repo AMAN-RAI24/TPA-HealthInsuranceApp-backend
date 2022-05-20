@@ -24,7 +24,7 @@ public class ManagerDashboardController {
 
     @GetMapping("/")
     ResponseEntity<List<GroupPolicy>> getAllPolicies( @RequestParam(defaultValue = "0") Integer pageNo,
-                                                      @RequestParam(defaultValue = "6") Integer pageSize,
+                                                      @RequestParam(defaultValue = "20") Integer pageSize,
                                                       @RequestParam(defaultValue = "groupPolicyId") String sortBy){
         return new ResponseEntity<List<GroupPolicy>>(managerDashboardService.getAllPolicies(pageNo, pageSize, sortBy),new HttpHeaders(), HttpStatus.OK);
     }
