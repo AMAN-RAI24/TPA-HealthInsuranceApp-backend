@@ -64,10 +64,10 @@ public class UserViewPolicyController {
 
 //        Finding existing user policy
 
-//        UserPolicy fetchedUserPolicy = userPolicyRepository.findByGroupPolicyAndUser(groupPolicy,user);
-//        if (!Objects.isNull(fetchedUserPolicy)){
-//          userPolicy.setUserPolicyId(fetchedUserPolicy.getUserPolicyId());
-//        }
+        UserPolicy fetchedUserPolicy = userPolicyRepository.findByGroupPolicyAndUser(groupPolicy,user);
+        if (!Objects.isNull(fetchedUserPolicy)){
+          userPolicy.setUserPolicyId(fetchedUserPolicy.getUserPolicyId());
+        }
 
         //Editing ends here
         userPolicy.setGroupPolicy(groupPolicy);
