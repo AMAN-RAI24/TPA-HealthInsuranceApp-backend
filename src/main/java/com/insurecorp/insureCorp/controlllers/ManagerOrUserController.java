@@ -45,14 +45,14 @@ public class ManagerOrUserController {
         UserPolicy userPolicy =  userPolicyRepository.findByGroupPolicyAndUser(latest,user);
 
 //        UserPolicy userPolicy =  userPolicyRepository.findByUser(user);
-
+        payload.put("planDetails", Map.of("policyName",latest.getPolicyName(),"coverage",latest.getCoverage(),"topUp",Objects.isNull(userPolicy)?0.0:userPolicy.getCoverage()));
         if (Objects.isNull(userPolicy)){
-            payload.put("planDetails",null);
+            payload.put("familyDetails",new ArrayList<>());
             return payload;
         }
-        GroupPolicy groupPolicy =  userPolicy.getGroupPolicy();
-        payload.put("planDetails", Map.of("policyName",groupPolicy.getPolicyName(),"coverage",groupPolicy.getCoverage(),"topUp",userPolicy.getCoverage()));
-        payload.put("familyDetails",userPolicy.getUserFamilyDetails());
+//        GroupPolicy groupPolicy =  userPolicy.getGroupPolicy();
+
+        payload.put("familyDetails", userPolicy.getUserFamilyDetails().isEmpty()? new ArrayList<>() : userPolicy.getUserFamilyDetails());
         return payload;
     }
 
