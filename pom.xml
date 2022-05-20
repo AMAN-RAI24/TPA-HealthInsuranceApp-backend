@@ -61,10 +61,15 @@
 			<artifactId>spring-cloud-sleuth-zipkin</artifactId>
 		</dependency>
 <dependency>
-<groupId>com.google.api.client</groupId>
-<artifactId>google-api-client</artifactId>
-<version>1.4.1-beta</version>
+    <groupId>com.google.api-client</groupId>
+    <artifactId>google-api-client</artifactId>
+    <version>1.19.0</version>
 </dependency>
+		<dependency>
+            <groupId>com.google.http-client</groupId>
+            <artifactId>google-http-client-jackson</artifactId>
+            <version>1.15.0-rc</version>
+        </dependency>
 		<dependency>
 			<groupId>com.google.http-client</groupId>
 			<artifactId>google-http-client-gson</artifactId>
@@ -89,7 +94,7 @@
 		<dependency>
 			<groupId>com.google.cloud</groupId>
 			<artifactId>google-cloud-storage</artifactId>
-			<version>1.17.0</version>
+			<version>1.23.0</version>
 		</dependency>
 	</dependencies>
 	<dependencyManagement>
