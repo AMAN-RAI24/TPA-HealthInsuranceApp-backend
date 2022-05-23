@@ -15,4 +15,6 @@ public interface GroupPolicyRepository extends JpaRepository<GroupPolicy,Integer
     List<GroupPolicy> findGroupPolicyByCompanyOrderByCreationDateDesc(Company company);
     List<GroupPolicy> findGroupPolicyByType(String type);
 
+    List<GroupPolicy> findGroupPolicyByCompanyOrderByGroupPolicyIdDesc(Company company);
+
 }

@@ -37,14 +37,50 @@ public class UserViewPolicyController {
         User user = loginService.getUser(jwt);
         List<UserPolicy> userPolicyList=userViewPolicyRepository.findByUserOrderByUserPolicyIdDesc(user);
 
+
+
         GroupPolicy groupPolicy=new GroupPolicy();
-        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
+//        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
+        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompany(user.getCompany());
+
+
+        GroupPolicy latest = groupPolicyList.get(0);
+
+
+        for(GroupPolicy groupPolicyTemp: groupPolicyList){
+            if (groupPolicyTemp.getCreationDate().compareTo(latest.getCreationDate()) >= 0){
+                latest = groupPolicyTemp;
+            }
+        }
         if(!groupPolicyList.isEmpty() && !userPolicyList.isEmpty() ){
-            return userPolicyList.get(0);
+            if(userPolicyList.get(0).getGroupPolicy().getGroupPolicyId() == latest.getGroupPolicyId()){
+
+                System.out.println("INSIDe if above wala");
+                return userPolicyList.get(0);
+            }
+            else{
+                UserPolicy userPolicy=new UserPolicy();
+                userPolicy.setUser(user);
+
+                //ADDIng started
+                System.out.println("INSIDe elseif above wala");
+
+                userPolicy.setGroupPolicy(latest);
+                //END
+                userPolicy.setUserFamilyDetails(new ArrayList<>());
+                userPolicy.setCoverage(0);
+                userPolicy.setUserPolicyId(1);
+                return userPolicy;
+            }
         } else if (!groupPolicyList.isEmpty()) {
             UserPolicy userPolicy=new UserPolicy();
             userPolicy.setUser(user);
-            userPolicy.setGroupPolicy(groupPolicyList.get(0));
+
+            //ADDIng started
+            System.out.println("INSIDe elseif below wala");
+
+            userPolicy.setGroupPolicy(latest);
+            //END
             userPolicy.setUserFamilyDetails(new ArrayList<>());
             userPolicy.setCoverage(0);
             userPolicy.setUserPolicyId(1);
@@ -60,7 +96,19 @@ public class UserViewPolicyController {
         System.out.println(user.getName());
         UserPolicy userPolicy=new UserPolicy();
         userPolicy.setUser(user);
-        GroupPolicy groupPolicy=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany()).get(0);
+        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
+
+        GroupPolicy latest = groupPolicyList.get(0);
+
+
+        for(GroupPolicy groupPolicyTemp: groupPolicyList){
+            if (groupPolicyTemp.getCreationDate().compareTo(latest.getCreationDate()) >= 0){
+                latest = groupPolicyTemp;
+            }
+        }
+
+        GroupPolicy groupPolicy =  latest;
+
 
 //        Finding existing user policy
 
