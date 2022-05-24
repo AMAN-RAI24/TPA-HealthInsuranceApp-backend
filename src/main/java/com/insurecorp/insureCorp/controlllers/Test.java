@@ -42,16 +42,17 @@ public class Test {
     }
     @PostMapping(value = "/test-file",consumes = MediaType.ALL_VALUE)
     public void addFile(@RequestBody MultipartFile file) throws IOException {
+        long timeStamp = System.currentTimeMillis();
         String projectId="us-gcp-ame-con-116-npd-1";
         String bucketName="hu-may-prod-insure-corp";
         System.out.println("dsfsadf");
         System.out.println(file.getOriginalFilename());
 
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
-        BlobId blobId = BlobId.of(bucketName, "uploaded_image");
+        BlobId blobId = BlobId.of(bucketName, String.valueOf(timeStamp));
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
         storage.create(blobInfo, file.getBytes());
-        System.out.println("File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + "uploaded_image");
+        System.out.println("File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + timeStamp);
 
         Storage storage1 = StorageOptions.getDefaultInstance().getService();
         System.out.println("Buckets:");
@@ -77,15 +78,15 @@ public class Test {
     }
 
     @GetMapping(value = "/getImage",produces = MediaType.IMAGE_JPEG_VALUE)
-    ResponseEntity<Resource> view(){
+    ResponseEntity<Resource> view(@RequestParam Long id){
         String projectId="us-gcp-ame-con-116-npd-1";
         String bucketName="hu-may-prod-insure-corp";
 
-       String objectName,destFilePath;  // The ID of your GCP project    // String projectId = "your-project-id";    // The ID of your GCS bucket    // String bucketName = "your-unique-bucket-name";    // The ID of your GCS object    // String objectName = "your-object-name";    // The path to which the file should be downloaded    // String destFilePath = "/local/path/to/file.txt";
-        objectName = "uploaded_image";
+       String destFilePath;  // The ID of your GCP project    // String projectId = "your-project-id";    // The ID of your GCS bucket    // String bucketName = "your-unique-bucket-name";    // The ID of your GCS object    // String objectName = "your-object-name";    // The path to which the file should be downloaded    // String destFilePath = "/local/path/to/file.txt";
+//        objectName = "uploaded_image";
 //        destFilePath = "/home/vipinkumar6/d";
         Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
-        Blob blob = storage.get(BlobId.of(bucketName, objectName));
+        Blob blob = storage.get(BlobId.of(bucketName, String.valueOf(id)));
 //        long blobLength = (long) blob.getSize()
         byte[] stream = blob.getContent();
         ByteArrayResource inputStream = new ByteArrayResource(stream);

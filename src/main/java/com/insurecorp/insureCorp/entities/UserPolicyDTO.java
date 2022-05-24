@@ -1,6 +1,8 @@
 package com.insurecorp.insureCorp.entities;
 
 
+import org.springframework.web.multipart.MultipartFile;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,8 @@ public class UserPolicyDTO {
     int policyId;
     double coverage ;
     ArrayList<UserFamilyDetails> familyDetails;
+
+//    ArrayList<MultipartFile> familyIdImages;
 
     public int getPolicyId() {
         return policyId;
@@ -41,4 +45,11 @@ public class UserPolicyDTO {
         this.familyDetails = familyDetails;
     }
 
+//    public ArrayList<MultipartFile> getFamilyIdImages() {
+//        return familyIdImages;
+//    }
+//
+//    public void setFamilyIdImages(ArrayList<MultipartFile> familyIdImages) {
+//        this.familyIdImages = familyIdImages;
+//    }
 }
