@@ -22,11 +22,14 @@ public class ManagerDashboardController {
     ManagerDashboardService managerDashboardService;
 
 
+//    @GetMapping("/")
+//    ResponseEntity<List<GroupPolicy>> getAllPolicies( @RequestParam(defaultValue = "0") Integer pageNo,
+//                                                      @RequestParam(defaultValue = "20") Integer pageSize,
+
+//                                                      @RequestParam(defaultValue = "groupPolicyId") String sortBy){@GetMapping("/")
     @GetMapping("/")
-    ResponseEntity<List<GroupPolicy>> getAllPolicies( @RequestParam(defaultValue = "0") Integer pageNo,
-                                                      @RequestParam(defaultValue = "20") Integer pageSize,
-                                                      @RequestParam(defaultValue = "groupPolicyId") String sortBy){
-        return new ResponseEntity<List<GroupPolicy>>(managerDashboardService.getAllPolicies(pageNo, pageSize, sortBy),new HttpHeaders(), HttpStatus.OK);
+    ResponseEntity<List<GroupPolicy>> getAllPolicies(){
+        return new ResponseEntity<List<GroupPolicy>>(managerDashboardService.getAllPolicies(),new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/{policyId}")

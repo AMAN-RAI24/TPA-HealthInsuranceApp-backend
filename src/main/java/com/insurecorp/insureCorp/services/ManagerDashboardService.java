@@ -21,14 +21,17 @@ public class ManagerDashboardService {
     GroupPolicyRepository groupPolicyRepository;
 
 
-    public List<GroupPolicy> getAllPolicies(Integer pageNo, Integer pageSize, String sortBy) {
-        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
-        Page<GroupPolicy> pagedResult = groupPolicyRepository.findAll(paging);
-        if(pagedResult.hasContent()) {
-            return pagedResult.getContent();
-        } else {
-            return new ArrayList<GroupPolicy>();
-        }
+    public List<GroupPolicy> getAllPolicies() {
+//        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
+//        Page<GroupPolicy> pagedResult = groupPolicyRepository.findAll(paging);
+        List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("APPROVED");
+//        if(pagedResult.hasContent()) {
+//            return pagedResult.getContent();
+//        } else {
+//            return new ArrayList<>();
+//        }
+
+        return pagedResult;
     }
 
     public GroupPolicy getPolicyById(Integer policyId) {

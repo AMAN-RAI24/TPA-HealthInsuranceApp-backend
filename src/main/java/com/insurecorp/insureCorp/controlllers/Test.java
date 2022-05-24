@@ -7,10 +7,14 @@ import com.insurecorp.insureCorp.entities.User;
 import com.insurecorp.insureCorp.repositories.UserRepository;
 import com.insurecorp.insureCorp.requestModels.TestFileUploadRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.core.io.Resource;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -70,5 +74,30 @@ public class Test {
         for (Bucket bucket : buckets.iterateAll()) {
             System.out.println(bucket.toString());
         }
+    }
+
+    @GetMapping(value = "/getImage",produces = MediaType.IMAGE_JPEG_VALUE)
+    ResponseEntity<Resource> view(){
+        String projectId="us-gcp-ame-con-116-npd-1";
+        String bucketName="hu-may-prod-insure-corp";
+
+       String objectName,destFilePath;  // The ID of your GCP project    // String projectId = "your-project-id";    // The ID of your GCS bucket    // String bucketName = "your-unique-bucket-name";    // The ID of your GCS object    // String objectName = "your-object-name";    // The path to which the file should be downloaded    // String destFilePath = "/local/path/to/file.txt";
+        objectName = "uploaded_image";
+//        destFilePath = "/home/vipinkumar6/d";
+        Storage storage = StorageOptions.newBuilder().setProjectId(projectId).build().getService();
+        Blob blob = storage.get(BlobId.of(bucketName, objectName));
+//        long blobLength = (long) blob.getSize()
+        byte[] stream = blob.getContent();
+        ByteArrayResource inputStream = new ByteArrayResource(stream);
+
+
+//        blob.downloadTo(Paths.get(destFilePath));
+//        System.out.println(        "Downloaded object "            + objectName
+//            + " from bucket name "            + bucketName
+//                    + " to "            + destFilePath);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .contentLength(inputStream.contentLength())
+                .body(inputStream);
     }
 }

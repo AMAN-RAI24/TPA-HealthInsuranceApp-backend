@@ -27,6 +27,7 @@ public class GroupPolicy {
     private Integer hospitalTier;
     private Integer roomRentLimit;
     private Boolean diagnosticTest;
+    private String status = "PENDING";
 
 
     @OneToOne(cascade = CascadeType.ALL,fetch = FetchType.EAGER)

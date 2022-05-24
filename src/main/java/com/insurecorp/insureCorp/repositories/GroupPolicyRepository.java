@@ -17,4 +17,8 @@ public interface GroupPolicyRepository extends JpaRepository<GroupPolicy,Integer
 
     List<GroupPolicy> findGroupPolicyByCompanyOrderByGroupPolicyIdDesc(Company company);
 
+    List<GroupPolicy> findGroupPolicyByStatus(String status);
+
+    List<GroupPolicy> findGroupPolicyByCompanyAndStatus(Company company,String status);
+
 }

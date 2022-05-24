@@ -41,8 +41,8 @@ public class UserViewPolicyController {
 
         GroupPolicy groupPolicy=new GroupPolicy();
 //        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
-        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompany(user.getCompany());
-
+//        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompany(user.getCompany());
+        List<GroupPolicy> groupPolicyList = groupPolicyRepository.findGroupPolicyByCompanyAndStatus(user.getCompany(),"APPROVED");
 
         GroupPolicy latest = groupPolicyList.get(0);
 
@@ -96,8 +96,8 @@ public class UserViewPolicyController {
         System.out.println(user.getName());
         UserPolicy userPolicy=new UserPolicy();
         userPolicy.setUser(user);
-        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
-
+//        List<GroupPolicy> groupPolicyList=groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
+        List<GroupPolicy> groupPolicyList = groupPolicyRepository.findGroupPolicyByCompanyAndStatus(user.getCompany(),"APPROVED");
         GroupPolicy latest = groupPolicyList.get(0);
 
 
