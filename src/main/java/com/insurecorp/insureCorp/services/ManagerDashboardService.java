@@ -2,6 +2,7 @@ package com.insurecorp.insureCorp.services;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.insurecorp.insureCorp.entities.GroupPolicy;
+import com.insurecorp.insureCorp.entities.User;
 import com.insurecorp.insureCorp.exceptions.CustomException;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class ManagerDashboardService {
 
     @Autowired
     GroupPolicyRepository groupPolicyRepository;
+
+    @Autowired
+    private LoginService loginService;
 
 
     public List<GroupPolicy> getAllPolicies() {
@@ -95,5 +99,34 @@ public class ManagerDashboardService {
         return payload;
     }
 
-//    Map<String, List> play(){}
+    public List<GroupPolicy> getLatestGroupPolicy(String jwt) {
+        List<GroupPolicy> groupPolicyList = groupPolicyRepository.findGroupPolicyByCompany(loginService.getUser(jwt).getCompany());
+        GroupPolicy latest = groupPolicyList.get(0);
+        GroupPolicy secondLatest = groupPolicyList.get(0);
+        for(GroupPolicy groupPolicy: groupPolicyList){
+            if (groupPolicy.getCreationDate().compareTo(latest.getCreationDate()) >= 0){
+                latest = groupPolicy;
+            }else if(groupPolicy.getCreationDate().compareTo(secondLatest.getCreationDate()) >= 0){
+                secondLatest = groupPolicy;
+            }
+        }
+        return List.of(latest,secondLatest);
+    }
+
+
+
+    public GroupPolicy getLatestGroupPolicyUsingStatus(String jwt, String status) {
+        return findLatestGroupPolicy(groupPolicyRepository.findGroupPolicyByCompanyAndStatus(loginService.getUser(jwt).getCompany(),status));
+    }
+
+    GroupPolicy findLatestGroupPolicy(List<GroupPolicy> groupPolicyList){
+        GroupPolicy latest = groupPolicyList.get(0);
+        for(GroupPolicy groupPolicy: groupPolicyList){
+            if (groupPolicy.getCreationDate().compareTo(latest.getCreationDate()) >= 0){
+                latest = groupPolicy;
+            }
+        }
+        return latest;
+    }
+
 }

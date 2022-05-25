@@ -53,6 +53,15 @@ public class ManagerDashboardController {
         return ResponseEntity.ok().header("Content-Type","application/json").body(managerDashboardService.comparePlansById(planId_1, planId_2));
     }
 
+    @GetMapping("/latest")
+    ResponseEntity<List<GroupPolicy>> getLatestGroupPolicy(@RequestHeader("Authorization") String jwt){
+        return ResponseEntity.ok(managerDashboardService.getLatestGroupPolicy(jwt));
+    }
+
+    @GetMapping("/latest/{status}")
+    ResponseEntity<GroupPolicy> getLatestGroupPolicyUsingStatus(@RequestHeader("Authorization") String jwt,@PathVariable String status){
+        return ResponseEntity.ok(managerDashboardService.getLatestGroupPolicyUsingStatus(jwt,status));
+    }
 
 
 
