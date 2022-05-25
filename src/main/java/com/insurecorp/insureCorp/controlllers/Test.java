@@ -3,7 +3,9 @@ package com.insurecorp.insureCorp.controlllers;
 import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.*;
 
+import com.insurecorp.insureCorp.entities.GroupPolicy;
 import com.insurecorp.insureCorp.entities.User;
+import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
 import com.insurecorp.insureCorp.repositories.UserRepository;
 import com.insurecorp.insureCorp.requestModels.TestFileUploadRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,8 @@ public class Test {
 
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    GroupPolicyRepository groupPolicyRepository;
 
     @GetMapping("/hw")
     public String helloWorld()
@@ -100,5 +104,14 @@ public class Test {
                 .status(HttpStatus.OK)
                 .contentLength(inputStream.contentLength())
                 .body(inputStream);
+    }
+    @GetMapping("/fixStatus")
+    String fixStatus(){
+        List<GroupPolicy> gp =  groupPolicyRepository.findGroupPolicyByStatus(null);
+        for(GroupPolicy g: gp){
+            g.setStatus("PENDING");
+            groupPolicyRepository.save(g);
+        }
+        return "FIXED";
     }
 }
