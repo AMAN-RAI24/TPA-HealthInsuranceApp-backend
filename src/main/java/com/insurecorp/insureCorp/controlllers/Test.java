@@ -114,4 +114,13 @@ public class Test {
         }
         return "FIXED";
     }
+    @GetMapping("/fixCompany")
+    String fixCompany(){
+        List<GroupPolicy> gp =  groupPolicyRepository.findGroupPolicyByCompany(null);
+        for(GroupPolicy g: gp){
+
+            groupPolicyRepository.delete(g);
+        }
+        return "REMOVED";
+    }
 }
