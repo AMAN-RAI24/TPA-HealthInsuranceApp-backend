@@ -31,11 +31,13 @@ public class ManagerDashboardService {
         List<GroupPolicy> payload = new ArrayList<>();
         payload.add(getLatestGroupPolicy(jwt));
         List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("APPROVED",Sort.by("creationDate").descending());
-        for(GroupPolicy gp: pagedResult){
-            if (gp.getGroupPolicyId() == payload.get(0).getGroupPolicyId()){
-                pagedResult.remove(gp.getGroupPolicyId());
-            }
-        }
+//        for(GroupPolicy gp: pagedResult){
+//            if (gp.getGroupPolicyId() == payload.get(0).getGroupPolicyId()){
+//                pagedResult.remove(gp.getGroupPolicyId());
+//            }
+//        }
+
+        pagedResult.remove(payload.get(0));
         payload.addAll(pagedResult);
 //        if(pagedResult.hasContent()) {
 //            return pagedResult.getContent();
