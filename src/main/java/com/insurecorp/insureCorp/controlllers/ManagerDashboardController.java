@@ -28,8 +28,8 @@ public class ManagerDashboardController {
 
 //                                                      @RequestParam(defaultValue = "groupPolicyId") String sortBy){@GetMapping("/")
     @GetMapping("/")
-    ResponseEntity<List<GroupPolicy>> getAllPolicies(){
-        return new ResponseEntity<List<GroupPolicy>>(managerDashboardService.getAllPolicies(),new HttpHeaders(), HttpStatus.OK);
+    ResponseEntity<List<GroupPolicy>> getAllPolicies(@RequestHeader("Authorization") String jwt){
+        return new ResponseEntity<List<GroupPolicy>>(managerDashboardService.getAllPolicies(jwt),new HttpHeaders(), HttpStatus.OK);
     }
 
     @GetMapping("/{policyId}")
@@ -54,7 +54,7 @@ public class ManagerDashboardController {
     }
 
     @GetMapping("/latest")
-    ResponseEntity<List<GroupPolicy>> getLatestGroupPolicy(@RequestHeader("Authorization") String jwt){
+    ResponseEntity<GroupPolicy> getLatestGroupPolicy(@RequestHeader("Authorization") String jwt){
         return ResponseEntity.ok(managerDashboardService.getLatestGroupPolicy(jwt));
     }
 

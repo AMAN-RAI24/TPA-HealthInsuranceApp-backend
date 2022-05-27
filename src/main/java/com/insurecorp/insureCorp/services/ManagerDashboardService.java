@@ -25,17 +25,25 @@ public class ManagerDashboardService {
     private LoginService loginService;
 
 
-    public List<GroupPolicy> getAllPolicies() {
+    public List<GroupPolicy> getAllPolicies(String jwt) {
 //        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 //        Page<GroupPolicy> pagedResult = groupPolicyRepository.findAll(paging);
-        List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("APPROVED");
+        List<GroupPolicy> payload = new ArrayList<>();
+        payload.add(getLatestGroupPolicy(jwt));
+        List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("APPROVED",Sort.by("creationDate").descending());
+        for(GroupPolicy gp: pagedResult){
+            if (gp.getGroupPolicyId() == payload.get(0).getGroupPolicyId()){
+                pagedResult.remove(gp.getGroupPolicyId());
+            }
+        }
+        payload.addAll(pagedResult);
 //        if(pagedResult.hasContent()) {
 //            return pagedResult.getContent();
 //        } else {
 //            return new ArrayList<>();
 //        }
 
-        return pagedResult;
+        return payload;
     }
 
     public GroupPolicy getPolicyById(Integer policyId) {
@@ -99,18 +107,8 @@ public class ManagerDashboardService {
         return payload;
     }
 
-    public List<GroupPolicy> getLatestGroupPolicy(String jwt) {
-        List<GroupPolicy> groupPolicyList = groupPolicyRepository.findGroupPolicyByCompany(loginService.getUser(jwt).getCompany());
-        GroupPolicy latest = groupPolicyList.get(0);
-        GroupPolicy secondLatest = groupPolicyList.get(0);
-        for(GroupPolicy groupPolicy: groupPolicyList){
-            if (groupPolicy.getCreationDate().compareTo(latest.getCreationDate()) >= 0){
-                latest = groupPolicy;
-            }else if(groupPolicy.getCreationDate().compareTo(secondLatest.getCreationDate()) >= 0){
-                secondLatest = groupPolicy;
-            }
-        }
-        return List.of(latest,secondLatest);
+    public GroupPolicy getLatestGroupPolicy(String jwt) {
+        return findLatestGroupPolicy(groupPolicyRepository.findGroupPolicyByCompany(loginService.getUser(jwt).getCompany()));
     }
 
 
