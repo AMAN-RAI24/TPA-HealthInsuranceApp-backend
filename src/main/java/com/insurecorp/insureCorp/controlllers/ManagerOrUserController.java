@@ -51,7 +51,7 @@ public class ManagerOrUserController {
         }
 
         UserPolicy userPolicy =  userPolicyRepository.findByGroupPolicyAndUser(latest,user);
-        payload.put("planDetails", Map.of("policyName",latest.getPolicyName(),"coverage",latest.getCoverage(),"topUp",Objects.isNull(userPolicy)?0.0:userPolicy.getCoverage()));
+        payload.put("planDetails", Map.of("policyName",latest.getPolicyName(),"coverage",latest.getCoverage(),"topUp",Objects.isNull(userPolicy)?0.0:userPolicy.getCoverage(),"date",latest.getCreationDate()));
 
         if ("ROLE_MANAGER".equals(user.getRole().getRole())){
             List<GroupPolicy> previousPlans = groupPolicyRepository.findGroupPolicyByCompanyOrderByCreationDateDesc(user.getCompany());
