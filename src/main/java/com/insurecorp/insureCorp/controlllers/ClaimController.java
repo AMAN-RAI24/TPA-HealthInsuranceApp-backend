@@ -10,6 +10,7 @@ import com.insurecorp.insureCorp.repositories.HospitalRepository;
 import com.insurecorp.insureCorp.repositories.UserPolicyRepository;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -54,7 +55,6 @@ public class ClaimController {
         claim.setDisease(claimData.getDisease());
         claim.setDiseaseCategory(claimData.getDiseaseCategory());
         claim.setPatient(claimData.getPatient());
-
         List<String> docUrls=new ArrayList<>();
         System.out.println(claimData.getClaimAmount());
         for(MultipartFile file : files){
@@ -63,8 +63,14 @@ public class ClaimController {
 //            docUrls.add(String.valueOf(objName));
         }
         claim.setDocumentUrl(docUrls);
-//        claimRepository.save(claim);
+        claimRepository.save(claim);
         return "ok";
+    }
+
+    @RequestMapping(path="/get-claims",method=RequestMethod.GET)
+    public List<Claim>  getClaimsByUser(@RequestHeader("Authorization") String jwt){
+        User user= loginService.getUser(jwt);
+        return claimRepository.findByUserName(user.getEmail(), Sort.by("createdAt").descending());
     }
 
     public long addFile(MultipartFile file) throws IOException {
