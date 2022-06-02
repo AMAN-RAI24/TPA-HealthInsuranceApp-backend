@@ -1,6 +1,5 @@
 package com.insurecorp.insureCorp.controlllers;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.*;
@@ -11,10 +10,7 @@ import com.insurecorp.insureCorp.repositories.UserPolicyRepository;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -171,7 +167,10 @@ public class UserViewPolicyController {
         BlobId blobId = BlobId.of(bucketName, String.valueOf(timeStamp));
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
         storage.create(blobInfo, file.getBytes());
+
+
         System.out.println("File " + file.getOriginalFilename() + " uploaded to bucket " + bucketName + " as " + timeStamp);
+
 
         Storage storage1 = StorageOptions.getDefaultInstance().getService();
         System.out.println("Buckets:");

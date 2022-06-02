@@ -83,7 +83,7 @@ public class PolicyController {
             policy.setPolicyId(item.getGroupPolicyId());
             policies.add(policy);
         }
-        return policies;
+        return policies.size()>4?policies.subList(0,4):policies;
     }
     @GetMapping("/get-base-plans")
     public List<Policies> getBasePlans()
