@@ -40,7 +40,15 @@ public class ClaimController {
     @RequestMapping(path="/get-family" , method=RequestMethod.GET)
     public List<UserFamilyDetails> getFamilyDetails(@RequestHeader("Authorization") String jwt){
         User user=loginService.getUser(jwt);
-        return userPolicyRepository.findByUserOrderByUserPolicyIdDesc(user).get(0).getUserFamilyDetails();
+        UserFamilyDetails userFamilyDetails=new UserFamilyDetails();
+        userFamilyDetails.setImageUrl("");
+        userFamilyDetails.setPhoneNumber(user.getMobileNumber());
+        userFamilyDetails.setName(user.getName());
+        userFamilyDetails.setAge(0);
+        userFamilyDetails.setRelation("self");
+        List<UserFamilyDetails> x=userPolicyRepository.findByUserOrderByUserPolicyIdDesc(user).get(0).getUserFamilyDetails();
+        x.add(userFamilyDetails);
+        return x;
     }
 
     @RequestMapping(path="/claim-request",method = RequestMethod.POST,consumes = {MediaType.IMAGE_PNG_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
@@ -59,8 +67,8 @@ public class ClaimController {
         System.out.println(claimData.getClaimAmount());
         for(MultipartFile file : files){
             System.out.println(file.getOriginalFilename());
-//            Long objName = addFile(file);
-//            docUrls.add(String.valueOf(objName));
+            Long objName = addFile(file);
+            docUrls.add(String.valueOf(objName));
         }
         claim.setDocumentUrl(docUrls);
         claimRepository.save(claim);
