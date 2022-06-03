@@ -10,6 +10,7 @@ import com.insurecorp.insureCorp.responseModels.Policies;
 import com.insurecorp.insureCorp.responseModels.PolicyAddedResponse;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -51,7 +52,8 @@ public class PolicyController {
     public List<Policies> getPolicyByCompany(@RequestHeader("Authorization") String jwt)
     {
         User manager = loginService.getUser(jwt);
-        List<GroupPolicy> groupPolicies = groupPolicyRepository.findGroupPolicyByCompany(manager.getCompany());
+        List<GroupPolicy> groupPolicies = groupPolicyRepository.findGroupPolicyByCompanyAndStatus(manager.getCompany(),"APPROVED", Sort.by("creationDate").descending());
+//        List<GroupPolicy> groupPolicies = groupPolicyRepository.findGroupPolicyByCompany(manager.getCompany());
         List<Policies> policies = new ArrayList<>();
         for (GroupPolicy item: groupPolicies)
         {

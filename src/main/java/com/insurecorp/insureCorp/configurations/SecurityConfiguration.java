@@ -25,6 +25,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -47,6 +48,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                         CorsConfiguration config = new CorsConfiguration();
 //                        config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
                         config.setAllowedOrigins(Collections.singletonList("https://insure-corp-frontend-urtjok3rza-wl.a.run.app"));
+//                        config.setAllowedOrigins(List.of("https://insure-corp-frontend-urtjok3rza-wl.a.run.app","http://localhost:3000"));
                         config.setAllowedMethods(Collections.singletonList("*"));
                         config.setAllowCredentials(true);
                         config.setAllowedHeaders(Collections.singletonList("*"));

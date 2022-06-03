@@ -35,7 +35,8 @@ public class ClaimController {
     public List<Hospital> getHospitalsByTier(@RequestHeader("Authorization") String jwt){
         User user=loginService.getUser(jwt);
         GroupPolicy groupPolicy=groupPolicyRepository.findGroupPolicyByCompanyOrderByGroupPolicyIdDesc(user.getCompany()).get(0);
-        return hospitalRepository.findByTier(groupPolicy.getHospitalTier());
+        return hospitalRepository.findByTierLessThanEqual(groupPolicy.getHospitalTier());
+//        return hospitalRepository.findByTier(groupPolicy.getHospitalTier());
     }
     @RequestMapping(path="/get-family" , method=RequestMethod.GET)
     public List<UserFamilyDetails> getFamilyDetails(@RequestHeader("Authorization") String jwt){

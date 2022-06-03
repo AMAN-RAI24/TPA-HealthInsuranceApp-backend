@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface HospitalRepository extends JpaRepository<Hospital,Integer> {
     List<Hospital> findByTier(int tier);
+    List<Hospital> findByTierLessThanEqual(int tier);
 }

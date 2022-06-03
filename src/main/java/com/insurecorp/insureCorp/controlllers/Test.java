@@ -4,8 +4,10 @@ import com.google.api.gax.paging.Page;
 import com.google.cloud.storage.*;
 
 import com.insurecorp.insureCorp.entities.GroupPolicy;
+import com.insurecorp.insureCorp.entities.Hospital;
 import com.insurecorp.insureCorp.entities.User;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
+import com.insurecorp.insureCorp.repositories.HospitalRepository;
 import com.insurecorp.insureCorp.repositories.UserRepository;
 import com.insurecorp.insureCorp.requestModels.TestFileUploadRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +35,9 @@ public class Test {
     UserRepository userRepository;
     @Autowired
     GroupPolicyRepository groupPolicyRepository;
+
+    @Autowired
+    HospitalRepository hospitalRepository;
 
     @GetMapping("/hw")
     public String helloWorld()
@@ -122,5 +127,24 @@ public class Test {
             groupPolicyRepository.delete(g);
         }
         return "REMOVED";
+    }
+
+
+    @GetMapping("/fixPlans")
+    String fixPlans(@RequestParam String status){
+        List<GroupPolicy> gp =  groupPolicyRepository.findGroupPolicyByStatus(status);
+        for(GroupPolicy g: gp){
+//            g.setStatus("PENDING");
+            groupPolicyRepository.delete(g);
+//            groupPolicyRepository.save(g);
+        }
+        return "REMOVED";
+    }
+
+    @GetMapping("/fixHospitals")
+    String fixHospitals(@RequestParam String status){
+        hospitalRepository.deleteAll();
+
+        return "REMOVED HOSPITALS";
     }
 }
