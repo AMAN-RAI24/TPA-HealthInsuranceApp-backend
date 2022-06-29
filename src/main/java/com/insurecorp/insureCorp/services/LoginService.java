@@ -63,7 +63,10 @@ public class LoginService {
     {
         JwtUtils userInfo = new JwtUtils();
         userInfo.processJWT(jwt);
-        User user =userRepository.findUserByEmail(userInfo.getUsername()).get(0);
+        System.out.println(userInfo.getUsername());
+             User user = userRepository.findUserByEmail(userInfo.getUsername()).get(0);
+
+        System.out.println("here");
         return user;
     }
 }

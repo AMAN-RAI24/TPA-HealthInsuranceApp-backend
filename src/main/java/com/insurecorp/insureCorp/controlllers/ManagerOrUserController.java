@@ -1,12 +1,13 @@
 package com.insurecorp.insureCorp.controlllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.insurecorp.insureCorp.entities.GroupPolicy;
-import com.insurecorp.insureCorp.entities.User;
-import com.insurecorp.insureCorp.entities.UserPolicy;
+import com.insurecorp.insureCorp.entities.*;
 import com.insurecorp.insureCorp.exceptions.CustomException;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
+import com.insurecorp.insureCorp.repositories.InsuranceCompanyRepository;
+import com.insurecorp.insureCorp.repositories.OfferRepository;
 import com.insurecorp.insureCorp.repositories.UserPolicyRepository;
+import com.insurecorp.insureCorp.responseModels.InsuranceAcceptedPlans;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,6 +25,10 @@ public class ManagerOrUserController {
     private UserPolicyRepository userPolicyRepository;
 
     @Autowired
+    private InsuranceCompanyRepository insuranceCompanyRepository;
+    @Autowired
+    private OfferRepository offerRepository;
+    @Autowired
     GroupPolicyRepository groupPolicyRepository;
 
     @GetMapping("/profile")
@@ -33,10 +38,10 @@ public class ManagerOrUserController {
             throw new CustomException("Invalid Token",403);
         }
         Map<String,Object> payload = new HashMap<>();
-        payload.put("userDetails",Map.of("employeeId",user.getEmployeeId(),"name", user.getName(),"dob",user.getDate(),"company",user.getCompany().getCompanyName(),"mobileNumber",user.getMobileNumber()));
+        payload.put("userDetails",Map.of("employeeId",user.getEmployeeId(),"name", user.getName(),"dob",user.getDate(),"company",user.getCompany()==null?user.getName():user.getCompany().getCompanyName(),"mobileNumber",user.getMobileNumber()));
 //        List<GroupPolicy> list = user.getCompany().getGroupPolicies();
         List<GroupPolicy> list = groupPolicyRepository.findGroupPolicyByCompanyAndStatus(user.getCompany(),"APPROVED");
-        if(list.isEmpty()){
+        if(list.isEmpty() ){
             throw new CustomException("Company hasn't bought any policies yet.",404);
         }
 
@@ -66,6 +71,8 @@ public class ManagerOrUserController {
             }
             payload.put("previousPlans",payloadPreviousPlans);
 
+        }else{
+
         }
         if (Objects.isNull(userPolicy)){
             payload.put("familyDetails",new ArrayList<>());
@@ -76,6 +83,27 @@ public class ManagerOrUserController {
         payload.put("familyDetails", userPolicy.getUserFamilyDetails().isEmpty()? new ArrayList<>() : userPolicy.getUserFamilyDetails());
         return payload;
     }
+    @GetMapping("/insurance-profile")
+    List<InsuranceAcceptedPlans> getInsuranceProfile(@RequestHeader("Authorization") String jwt)
+    {
+        List<InsuranceAcceptedPlans> plans = new ArrayList<>();
+        User user = loginService.getUser(jwt);
+        InsuranceCompany insuranceCompany = insuranceCompanyRepository.findInsuranceCompanyByName(user.getName()).get(0);
+        List<Offer> offers = offerRepository.findOfferByInsuranceCompanyAndStatus(insuranceCompany,"ACCEPTED");
+        List<InsuranceAcceptedPlans> acceptedPlans = new ArrayList<>();
 
+        for(Offer offer : offers)
+        {
+            InsuranceAcceptedPlans plan = new InsuranceAcceptedPlans();
+            plan.setPolicyName(offer.getGroupPolicy().getPolicyName());
+            plan.setId(offer.getGroupPolicy().getGroupPolicyId());
+            plan.setCoverage(offer.getGroupPolicy().getCoverage());
+            plan.setCreationDate(offer.getGroupPolicy().getCreationDate());
+            plan.setStatus("ACCEPTED");
+            acceptedPlans.add(plan);
+        }
+        System.out.println("size is "+offers.size());
+        return acceptedPlans;
+    }
 
 }

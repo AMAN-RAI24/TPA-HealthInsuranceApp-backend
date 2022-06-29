@@ -6,6 +6,7 @@ import com.insurecorp.insureCorp.exceptions.CustomException;
 import com.insurecorp.insureCorp.exceptions.CustomExceptionV2;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
 import com.insurecorp.insureCorp.repositories.UserPolicyRepository;
+import com.insurecorp.insureCorp.responseModels.CompanyManagerResponse;
 import com.insurecorp.insureCorp.responseModels.Policies;
 import com.insurecorp.insureCorp.responseModels.PolicyAddedResponse;
 import com.insurecorp.insureCorp.services.LoginService;
@@ -124,7 +125,23 @@ public class PolicyController {
         }
         return policies;
     }
+    @GetMapping("/get-company-manager-details/{id}")
+    CompanyManagerResponse getCompanyAndManagerDetails(@RequestHeader("Authorization") String jwt,@PathVariable int id)
+    {
+        User user=loginService.getUser(jwt);
+        CompanyManagerResponse response = new CompanyManagerResponse();
+        if( user.getRole().getRole().equals("ROLE_INSURANCE"))
+        {
 
+            response.setSame(true);
+        }else {
+            if(user.getCompany().getCompanyId()==groupPolicyRepository.getById(id).getCompany().getCompanyId())
+                response.setSame(true);
+            else
+                response.setSame(false);
+        }
+        return response;
+    }
     @PostMapping({"/add/userPolicy","/add/top-up","/add/coverage"})
     UserPolicy addUserPolicy(@RequestHeader("Authorization") String jwt, @RequestBody Map<String,Object> requestBody){
 //    List<UserFamilyDetails> addUserPolicy(@RequestHeader("Authorization") String jwt, @RequestBody Map<String,Object> requestBody){

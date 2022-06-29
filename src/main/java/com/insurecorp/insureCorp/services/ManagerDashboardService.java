@@ -28,24 +28,33 @@ public class ManagerDashboardService {
     public List<GroupPolicy> getAllPolicies(String jwt) {
 //        Pageable paging = PageRequest.of(pageNo, pageSize, Sort.by(sortBy));
 //        Page<GroupPolicy> pagedResult = groupPolicyRepository.findAll(paging);
-        List<GroupPolicy> payload = new ArrayList<>();
-        payload.add(getLatestGroupPolicy(jwt));
-        List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("APPROVED",Sort.by("creationDate").descending());
+        User user = loginService.getUser(jwt);
+        if(user.getRole().getRole().equals("ROLE_MANAGER")) {
+
+            List<GroupPolicy> payload = new ArrayList<>();
+            payload.add(getLatestGroupPolicyUsingStatus(jwt,"APPROVED"));
+            List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("APPROVED", Sort.by("creationDate").descending());
 //        for(GroupPolicy gp: pagedResult){
 //            if (gp.getGroupPolicyId() == payload.get(0).getGroupPolicyId()){
 //                pagedResult.remove(gp.getGroupPolicyId());
 //            }
 //        }
 
-        pagedResult.remove(payload.get(0));
-        payload.addAll(pagedResult);
+            pagedResult.remove(payload.get(0));
+            payload.addAll(pagedResult);
 //        if(pagedResult.hasContent()) {
 //            return pagedResult.getContent();
 //        } else {
 //            return new ArrayList<>();
 //        }
 
-        return payload;
+            return payload;
+        }else{
+            List<GroupPolicy> payload = new ArrayList<>();
+            List<GroupPolicy> pagedResult = groupPolicyRepository.findGroupPolicyByStatus("PENDING", Sort.by("creationDate").descending());
+            payload.addAll(pagedResult);
+            return payload;
+        }
     }
 
     public GroupPolicy getPolicyById(Integer policyId) {
@@ -110,16 +119,22 @@ public class ManagerDashboardService {
     }
 
     public GroupPolicy getLatestGroupPolicy(String jwt) {
+        System.out.println("latest");
+
         return findLatestGroupPolicy(groupPolicyRepository.findGroupPolicyByCompany(loginService.getUser(jwt).getCompany()));
     }
 
 
 
     public GroupPolicy getLatestGroupPolicyUsingStatus(String jwt, String status) {
+        System.out.println("latest");
+
         return findLatestGroupPolicy(groupPolicyRepository.findGroupPolicyByCompanyAndStatus(loginService.getUser(jwt).getCompany(),status));
     }
 
     GroupPolicy findLatestGroupPolicy(List<GroupPolicy> groupPolicyList){
+        System.out.println("latest");
+
         GroupPolicy latest = groupPolicyList.get(0);
         for(GroupPolicy groupPolicy: groupPolicyList){
             if (groupPolicy.getCreationDate().compareTo(latest.getCreationDate()) >= 0){

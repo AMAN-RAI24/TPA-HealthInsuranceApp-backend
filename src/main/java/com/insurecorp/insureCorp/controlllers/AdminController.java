@@ -1,17 +1,18 @@
 package com.insurecorp.insureCorp.controlllers;
 
-import com.insurecorp.insureCorp.entities.Company;
-import com.insurecorp.insureCorp.entities.GroupPolicy;
-import com.insurecorp.insureCorp.entities.Hospital;
-import com.insurecorp.insureCorp.entities.Role;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.insurecorp.insureCorp.entities.*;
 import com.insurecorp.insureCorp.exceptions.CustomException;
 import com.insurecorp.insureCorp.exceptions.CustomExceptionV2;
 import com.insurecorp.insureCorp.repositories.GroupPolicyRepository;
 import com.insurecorp.insureCorp.responseModels.EntityAddedResponse;
 import com.insurecorp.insureCorp.services.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.Map;
@@ -30,6 +31,20 @@ public class AdminController {
         EntityAddedResponse response = new EntityAddedResponse();
         response.setMessage("Hospital Added successfully!");
         response.setName(hospital.getHospitalName());
+        return response;
+    }
+
+
+    @PostMapping(value = "add/insurance-company",consumes = {MediaType.IMAGE_PNG_VALUE,MediaType.MULTIPART_FORM_DATA_VALUE})
+    private EntityAddedResponse addInsuranceCompany(@RequestParam String insuranceCompanyString, @RequestParam MultipartFile file) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        System.out.println("TESTING OBJ");
+        InsuranceCompany insuranceCompany = objectMapper.readValue(insuranceCompanyString,InsuranceCompany.class);
+        adminService.addInsuranceCompany(insuranceCompany);
+        EntityAddedResponse response = new EntityAddedResponse();
+        response.setMessage("Insurance company added successfully");
+        response.setName(insuranceCompany.getName());
+        System.out.println(file.getOriginalFilename());
         return response;
     }
     @PostMapping("/add/company")
