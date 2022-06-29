@@ -41,7 +41,7 @@ public class ManagerOrUserController {
         payload.put("userDetails",Map.of("employeeId",user.getEmployeeId(),"name", user.getName(),"dob",user.getDate(),"company",user.getCompany()==null?user.getName():user.getCompany().getCompanyName(),"mobileNumber",user.getMobileNumber()));
 //        List<GroupPolicy> list = user.getCompany().getGroupPolicies();
         List<GroupPolicy> list = groupPolicyRepository.findGroupPolicyByCompanyAndStatus(user.getCompany(),"APPROVED");
-        if(list.isEmpty() ){
+        if(list.isEmpty() && user.getCompany()!=null ){
             throw new CustomException("Company hasn't bought any policies yet.",404);
         }
 
