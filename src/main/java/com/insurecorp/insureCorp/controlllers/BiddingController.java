@@ -8,6 +8,7 @@ import com.insurecorp.insureCorp.requestModels.OfferRequest;
 import com.insurecorp.insureCorp.responseModels.BiddingOfferResponse;
 import com.insurecorp.insureCorp.responseModels.EntityAddedResponse;
 import com.insurecorp.insureCorp.responseModels.GroupPolicyBiddingResponse;
+import com.insurecorp.insureCorp.services.EmailService;
 import com.insurecorp.insureCorp.services.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -26,6 +27,9 @@ public class BiddingController {
     LoginService loginService;
     @Autowired
     OfferRepository offerRepository;
+
+    @Autowired
+    EmailService emailService;
     @PostMapping("/make-offer")
     EntityAddedResponse makeOffer(@RequestHeader("Authorization") String jwt, @RequestBody OfferRequest offerRequest)
     {
@@ -39,7 +43,16 @@ public class BiddingController {
         offerRepository.save(offer);
         EntityAddedResponse response = new EntityAddedResponse();
         response.setName("Offer from "+user.getName());
-        response.setMessage("Offer Placed succesfully");
+
+        try{
+            emailService.sendEmail(offer.getGroupPolicy().getManager().getEmail(),"Offer for your Group Policy from " + user.getName(),"Hi " + offer.getGroupPolicy().getManager().getName() +
+                    ",<br><br>"+ "<i>" + user.getName() + "</i> made an offer for your Group Policy("+offer.getGroupPolicy().getPolicyName() +").<br>Check this out <a href='https://insure-corp-frontend-urtjok3rza-wl.a.run.app/view-policy/"+offerRequest.getGroupPolicyId()+"'>here</a><br>" +
+                    "<br><br>If you wanted to contact Insurance Provider then click <a href='mailto:"+user.getEmail()+"'>here</a>"+
+                    "<br><br><br>Thanks for Believing in us<br>Insure-Corp");
+            response.setMessage("Offer Placed successfully.");
+        } catch (Exception e){
+            response.setMessage("Offer Placed successfully but "+ offer.getGroupPolicy().getManager().getEmail() + " not found.");
+        }
         return response;
     }
     @GetMapping("/all-offers")
